@@ -33,7 +33,6 @@ RUN mkdir -p ~/bin/x86_64 \
     && cd ../jkOwnLib/ && make \
     && cd ../isPcr/ && make \
     && rm -rf /root/kent
-    
 
 RUN git clone https://bitbucket.org/wingolab/mpd-dat.git \
     && mkdir /root/2bit && cd $_ \ 
