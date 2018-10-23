@@ -9,20 +9,20 @@ ENV PATH="/root/mpd-perl/bin:${PATH}" \
 WORKDIR /root
 
 RUN dnf install -y \
-       gcc \
-       gcc-c++ \
-       libpng-devel \
-       libuuid-devel \
-       make \
-       mariadb-devel \
-       patch \
-       perl \
-       rsync \
-       unzip \
-       wget \
-       which \
-       git \
-       openssh-clients
+    gcc \
+    gcc-c++ \
+    libpng-devel \
+    libuuid-devel \
+    make \
+    mariadb-devel \
+    patch \
+    perl \
+    rsync \
+    unzip \
+    wget \
+    which \
+    git \
+    openssh-clients
 
 RUN wget http://hgdownload.cse.ucsc.edu/admin/jksrc.v371.zip \
     && unzip -q jksrc.v371.zip \
