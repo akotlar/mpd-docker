@@ -6,6 +6,8 @@ MAINTAINER Alex Kotlar <akotlar@emory.edu>
 ENV PATH="/root/mpd-perl/bin:${PATH}" \
     PERL5LIB="/root/perl5/lib/perl5:/root/mpd-perl/lib:${PERL5LIB}"
 
+WORKDIR /root
+
 RUN dnf install -y \
        gcc \
        gcc-c++ \
@@ -26,23 +28,31 @@ RUN wget http://hgdownload.cse.ucsc.edu/admin/jksrc.v371.zip \
     && unzip -q jksrc.v371.zip \
     && rm jksrc.v371.zip
 
-RUN mkdir -p ~/bin/x86_64 \
+RUN mkdir -p bin/x86_64 \
     && export MACHTYPE=x86_64 \
     && cd kent/src/ && make libs \
     && cd lib/ && make \
     && cd ../jkOwnLib/ && make \
     && cd ../isPcr/ && make \
-    && rm -rf /root/kent
-    
+    && cd /root && rm -rf kent
 
-RUN git clone https://bitbucket.org/wingolab/mpd-dat.git \
+WORKDIR /root
+
+RUN git clone https://bitbucket.org/wingolab/mpd-dat \
     && mkdir /root/2bit && cd $_ \ 
-    && wget http://hgdownload.cse.ucsc.edu/goldenPath/hg38/bigZips/hg38.2bit
+    && wget http://hgdownload.cse.ucsc.edu/goldenPath/hg38/bigZips/hg38.2bit \
+    && cd /root
+
+WORKDIR /root
 
 RUN curl -L https://cpanmin.us | perl - App::cpanminus \
-    && mkdir -p ~/perl5/lib/perl \
-    && cpanm --local-lib=~/perl5 local::lib && eval $(perl -I ~/perl5/lib/perl5 -Mlocal::lib) \
-    && git clone https://github.com/akotlar/mpd-perl && cd mpd-perl \
-    && cpanm MPD.tar.gz 
+    && mkdir -p /root/perl5/lib/perl \
+    && cpanm --local-lib=/root/perl5 local::lib && eval $(perl -I /root/perl5/lib/perl5 -Mlocal::lib) \
+    && git clone https://github.com/akotlar/mpd-perl /root/mpd-perl && cd $_ \
+    && cpanm MPD.tar.gz
+
+WORKDIR /root
+
+RUN git clone https://github.com/wingolab-org/mpd-c /root/mpd-c && cd $_ && make
 
 WORKDIR /root/mpd-perl/
